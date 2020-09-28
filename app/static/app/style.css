@@ -1,0 +1,105 @@
+/* Navbar */
+.navbar-brand{
+    font-size: 32px;
+}
+.nav-link{
+    font-size: 20px;
+}
+#block-content{
+    margin-top: 130px;
+}
+
+/* Login */
+#signin-btn{
+    font-size: 16px;
+}
+
+/* Sign up */
+#signup-btn{
+    font-size: 16px;
+}
+#label{
+    color: grey;
+}
+#checkbox{
+    color: grey;
+}
+#error-text-email,#error-text-password,#error-text-first-name,
+#error-text-last-name,#error-text-date-of-birth,
+#error-text-department,#error-text-years{
+    color: red;
+}
+#s-error-text-email,#s-error-text-password,#s-error-text-first-name,
+#s-error-text-last-name,#s-error-text-date-of-birth,
+#s-error-text-department,#s-error-text-years,#s-error-text-student-id{
+    color: red;
+}
+#l-error-text-email,#l-error-text-password{
+    color: red;
+}
+#suc-text{
+    color: rgb(5, 196, 5);
+}
+
+/* Home */
+#edit-info-btn{
+    font-size: 15px;
+}
+#close-info-btn{
+    font-size: 15px;
+}
+#edit-info-close-btn{
+    font-size: 15px;
+}
+#fill-department-close-btn{
+    font-size: 15px;
+}
+#create-class-btn{
+    font-size: 19px;
+}
+#create-class-modal-btn{
+    font-size: 15px;
+}
+#close-class-modal{
+    font-size: 15px;
+}
+#all-class-btn{
+    -webkit-touch-callout: text;
+    -webkit-user-select: text;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+#cc-error-department,#cc-error-subject,#cc-error-years{
+    color: red;
+}
+#fill-department-error,#fill-years-error,#edit-user-years-error,#edit-user-department-error{
+    color: red;
+}
+#join-class-btn{
+    font-size: 16px;
+}
+#show-class-info-btn{
+    font-size: 17px;
+}
+#backhome-class-detail-btn{
+    font-size: 16px;
+}
+#ask-attendance-btn{
+    font-size: 17px
+}
+
+/* class detail */
+#leave-form-from-till{
+    color: grey;
+}
+#leave-form-from-till:hover{
+    color: black;
+}
+#back-from-leaveform-detail-btn{
+    font-size: 17px;
+}
+#edit-leave-form-btn{
+    font-size: 17px;
+}

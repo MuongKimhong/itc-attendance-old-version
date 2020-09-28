@@ -1,0 +1,363 @@
+{% extends "app/layout.html" %}
+<!-- static -->
+{% load static %}
+<!-- title -->
+{% block title %} <title>Class detail</title> {% endblock %}
+
+<!-- content -->
+{% block content %}
+<div class="row">
+  <!-- First Grid -->
+  <div class="col-md-9">
+    <!-- Class Info Card -->
+    <div class="card col-md-12 ml-auto mr-auto mt-3" id="class-info-card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4 mt-2">
+            <h5>
+              Lecturer : {{object.teacher.first_name}}
+              {{object.teacher.last_name}}
+            </h5>
+          </div>
+          <div class="col-md-4 mt-2">
+            <h5>Department: {{object.department}}</h5>
+          </div>
+          <div class="col-md-4 mt-2">
+            <h5>Year : {{object.years}}</h5>
+          </div>
+          <div class="col-md-4 mt-2">
+            <h5>Subject : {{object.subject}}</h5>
+          </div>
+          <div class="col-md-4 mt-2">
+            <h5>Total Student : {{object.student.all.count}}</h5>
+          </div>
+          {% if user.is_teacher %}
+          <div class="col-md-4 mt-2">
+            <h5>Class Code : {{object.random_code}}</h5>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <!-- End class info card -->
+    {% if user.is_student %}
+    <!-- Ask Attendance card -->
+    <div
+      class="card ml-auto mr-auto col-md-12 mt-3 z-depth-3"
+      id="ask-attendance-card"
+    >
+      <div class="card-body">
+        <form method="POST" id="ask-attendance-form">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-6 md-form pl-5">
+              {{form.leaveFromDate}}
+              <label for="" class="ml-5">Leave From Date</label>
+            </div>
+            <div class="col-md-6 md-form pr-5">
+              {{form.leaveTillDate}}
+              <label for="" class="ml-3">Leave Till Date</label>
+            </div>
+          </div>
+          <div class="col-md-12 md-form px-4">
+            {{form.leaveReason}}
+            <label for="" class="ml-4">Leave Reason</label>
+          </div>
+          <div class="text-right">
+            <button
+              type="submit"
+              class="btn btn-info btn-sm"
+              style="font-size: 16px"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    {% endif %}
+    <!-- End atendance card -->
+    <!-- Main Content card -->
+    <div class="card ml-auto mr-auto col-md-12 mt-3 z-depth-2">
+      <div class="card-body">
+        <!-- Student -->
+        {% if user.is_student %}
+        <h3 class="text-center">All Student Leaveforms</h3>
+        {% for leaveform in allLeaveForms %}
+        <div class="col-md-12 mt-5">
+          <a
+            href="{% url 'leaveform_detail' leaveform.id %}"
+            id="leave-form-from-till"
+          >
+            <h3>{{leaveform.leaveFromDate}} - {{leaveform.leaveTillDate}}</h3>
+          </a>
+          <h6>
+            Ask on: {{leaveform.date_created}} -
+            {{leaveform.student.first_name}} {{leaveform.student.last_name}}
+          </h6>
+        </div>
+        {% endfor %}
+        <!-- end for -->
+        {% endif %}
+        <!-- Teacher -->
+        {% if user.is_teacher %}
+        <!-- attendance-content -->
+        <div id="teacher-attendance-content">
+          <div class="row">
+            <h3 class="ml-auto">Attendance for</h3>
+            <h3 id="current-date" class="mr-auto ml-2"></h3>
+          </div>
+          <div class="row">
+            <h6 class="ml-auto" id="current-check">0</h6>
+            <h6 class="mr-auto">/{{number_of_student}}</h6>
+          </div>
+          <div class="col-md-12 mt-4">
+            <form method="POST" id="check-attendance-form">
+              {% csrf_token %}
+              <div class="row">
+                {% for form in form.student %}
+                <div class="col-md-4 px-0 mt-1">
+                  <h5>{{form.tag}}&nbsp; {{form.choice_label}}</h5>
+                </div>
+                {% endfor %}
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- leaveform-content -->
+        <div id="teacher-leaveforms-content">
+          <div class="row">
+            <h3 class="ml-auto">All leave forms -</h3>
+            <h3 class="mr-auto">- Total: {{allLeaveForms.all.count}}</h3>
+          </div>
+          {% for leaveform in allLeaveForms %}
+          <div class="col-md-12 mt-5">
+            <a
+              href="{% url 'leaveform_detail' leaveform.id %}"
+              id="leave-form-from-till"
+            >
+              <h3>{{leaveform.leaveFromDate}} - {{leaveform.leaveTillDate}}</h3>
+            </a>
+            <h6>
+              Ask on: {{leaveform.date_created}} -
+              {{leaveform.student.first_name}} {{leaveform.student.last_name}}
+            </h6>
+          </div>
+          {% endfor %}
+        </div>
+        <!-- all attendance content -->
+        <div id="teacher-all-attendances-content">
+          <h3 class="text-center">All Attendances Submitted</h3>
+          <div class="col-md-12">
+            <div class="row">
+              {% for attendance in allAttendances %}
+              <div class="col-md-6 mt-3">
+                <a
+                  href="{% url 'attendance_detail' attendance.id %}"
+                  id="attendance-date-submit"
+                >
+                  <h5>
+                    {{attendance.date_created|date:"d/N/Y - g:i a"}} Submitted
+                  </h5>
+                </a>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        <!-- attendance count -->
+        <div id="teacher-all-attendance-count">
+          <h3 class="text-center">All attendances count</h3>
+          <div class="col-md-12">
+            <div class="row">
+              {% for name in totalComeCount %}
+              <div class="col-md-4 mt-3">
+                <h5>{{name}}</h5>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      <div class="card-footer white text-right">
+        {% if user.is_teacher %}
+        <button
+          class="btn btn-primary btn-sm"
+          type="submit"
+          form="check-attendance-form"
+          style="font-size: 17px"
+          id="check-submit-btn"
+        >
+          Check
+        </button>
+        {% endif %}
+        <a
+          href="{% url 'home' %}"
+          class="btn btn-info btn-sm"
+          id="backhome-class-detail-btn"
+        >
+          Back
+        </a>
+      </div>
+    </div>
+    <!-- End Main Content Card -->
+  </div>
+  <!-- second grid -->
+  <div class="col-md-3">
+    <div class="card col-md-12 ml-auto mr-auto mt-3">
+      <button
+        class="btn btn-outline-info btn-lg py-2 px-2 ml-auto mr-auto mt-2 mb-2 col-md-12 text-capitalize"
+        id="show-class-info-btn"
+        type="button"
+      >
+        Class Info
+      </button>
+      <!-- student -->
+      {% if user.is_student %}
+      <button
+        class="btn btn-outline-success btn-lg py-2 px-2 ml-auto mr-auto mt-2 mb-2 col-md-12 text-capitalize"
+        id="ask-attendance-btn"
+        type="button"
+      >
+        Ask Leave Form
+      </button>
+      {% endif %}
+      <!-- teacher -->
+      {% if user.is_teacher %}
+      <button
+        class="btn btn-outline-success btn-lg py-2 px-2 ml-auto mr-auto mt-2 mb-2 col-md-12 text-capitalize"
+        id="show-attendance-btn"
+        type="button"
+        style="font-size: 17px"
+      >
+        Attendance ({{allAttendances.all.count}})
+      </button>
+      <button
+        class="btn btn-outline-primary btn-lg py-2 px-2 ml-auto mr-auto mt-2 mb-2 col-md-12 text-capitalize"
+        id="show-leaveform-btn"
+        type="button"
+        style="font-size: 17px"
+      >
+        Leave Forms ({{object.student.all.count}})
+      </button>
+      <button class="btn btn-outline-secondary btn-lg py-2 px-2 ml-auto mr-auto mt-2 mb-2 col-md-12 text-capitalize"
+        id="show-attendance-count-btn"
+        type="button"
+        style="font-size: 17px">
+        Student Attendance Count
+      </button>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+<!-- javascript -->
+{% block javascript %}
+<!-- teacher script  -->
+{% if user.is_teacher %}
+<script>
+  n = new Date();
+  year = n.getFullYear();
+  month = n.getMonth();
+  date = n.getDate();
+  document.getElementById("current-date").innerHTML =
+    date + "/" + month + "/" + year;
+
+  $(document).ready(function () {
+    var $checkboxes = $('input[type="checkbox"]');
+    $checkboxes.change(function () {
+      var countChecked = $checkboxes.filter(":checked").length;
+      $("#current-check").text(countChecked);
+    });
+  });
+</script>
+{% endif %}
+<script>
+  $(function () {
+    $("#class-info-card").hide();
+    $("#teacher-leaveforms-content").hide();
+    $("#teacher-all-attendances-content").hide();
+    $("#ask-attendance-card").hide();
+    $("#teacher-all-attendance-count").hide();
+    // show class btn
+    $("#show-class-info-btn").click(function () {
+      $("#class-info-card").slideToggle();
+      if ($("#show-class-info-btn").text().trim() == "Class Info") {
+        $("#show-class-info-btn").html("Hide");
+      } else if ($("#show-class-info-btn").text().trim() == "Hide") {
+        $("#show-class-info-btn").html("Class Info");
+      }
+    });
+    // ask attendance btn
+    $("#ask-attendance-btn").click(function () {
+      $("#ask-attendance-card").slideToggle();
+      if ($("#ask-attendance-btn").text().trim() == "Ask Leave Form") {
+        $("#ask-attendance-btn").html("Hide");
+      } else if ($("#ask-attendance-btn").text().trim() == "Hide") {
+        $("#ask-attendance-btn").html("Ask Leave Form");
+      }
+    });
+    // show leaveform btn
+    $("#show-leaveform-btn").click(function () {
+      if ($("#show-leaveform-btn").text().trim()[0] == "L") {
+        console.log("true");
+        $("#teacher-attendance-content").slideUp();
+        $("#teacher-all-attendance-count").slideUp();
+        $("#teacher-all-attendances-content").slideUp();
+        $("#teacher-leaveforms-content").slideDown();
+        $("#check-submit-btn").fadeOut();
+        $("#show-leaveform-btn").html("Hide");
+      } else if ($("#show-leaveform-btn").text().trim() == "Hide") {
+        $("#teacher-leaveforms-content").slideUp();
+        $("#teacher-all-attendances-content").slideUp();
+        $("#teacher-all-attendance-count").slideUp();
+        $("#teacher-attendance-content").slideDown();
+        $("#check-submit-btn").fadeIn();
+        $("#show-leaveform-btn").html("Leave Forms");
+      }
+    });
+    // Show all attendances content
+    $("#show-attendance-btn").click(function () {
+      if ($("#show-attendance-btn").text().trim()[0] == "A") {
+        $("#teacher-attendance-content").slideUp();
+        $("#teacher-leaveforms-content").slideUp();
+        $("#teacher-all-attendance-count").slideUp();
+        $("#teacher-all-attendances-content").slideDown();
+        $("#check-submit-btn").fadeOut();
+        $("#show-attendance-btn").html("Hide");
+      } else if ($("#show-attendance-btn").text().trim() == "Hide") {
+        $("#teacher-attendance-content").slideDown();
+        $("#teacher-leaveforms-content").slideUp();
+        $("#teacher-all-attendance-count").slideUp();
+        $("#teacher-all-attendances-content").slideUp();
+        $("#check-submit-btn").fadeIn();
+        $("#show-attendance-btn").html("Attendance");
+      }
+    });
+    $("#show-attendance-count-btn").click(function() {
+       console.log("sss")
+       console.log($("#show-attendance-count-btn").text().trim());
+      if ($("#show-attendance-count-btn").text().trim() == "Student Attendance Count" ) {
+        $("#teacher-attendance-content").slideUp();
+        $("#teacher-leaveforms-content").slideUp();
+        $("#teacher-all-attendances-content").slideUp();
+        $("#teacher-all-attendance-count").slideDown();
+        $("#check-submit-btn").fadeOut();
+        $("#show-attendance-count-btn").html("Hide");
+      }
+      else if ($("#show-attendance-count-btn").text().trim() == "Hide") {
+        console.log("dljahf")
+        $("#teacher-all-attendance-count").slideUp();
+        $("#teacher-laveforms-content").slideUp();
+        $("#teacher-all-attendance-content").slideUp();
+        $("#teacher-attendance-content").slideDown();
+        $("#check-submit-btn").fadeIn();
+        $("#show-attendance-count-btn").html("Student Attendance Count");
+      }
+    })
+
+  });
+</script>
+{% endblock %}

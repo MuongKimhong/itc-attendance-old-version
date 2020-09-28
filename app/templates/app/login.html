@@ -1,0 +1,43 @@
+{% extends "app/layout.html" %}
+<!-- static -->
+{% load static %}
+<!-- title -->
+{% block title %} <title>Sign In</title>{% endblock %}
+<!-- content -->
+{% block content %}
+<div class="card col-md-8 ml-auto mr-auto">
+  <div class="card-body">
+    <h3 class="text-center">Sign In</h3>
+    <form action="" method="POST">
+      {% csrf_token %}
+      <div class="md-form">
+        {{ form.email }}
+        <label>Email Address</label>
+        <small id="l-error-text-email">{{form.email.errors|striptags}}</small>
+      </div>
+      <div class="md-form">
+        {{ form.password }}
+        <label>Password</label>
+        <small id="l-error-text-password"
+          >{{form.password.errors|striptags}}</small
+        >
+      </div>
+      <div class="row">
+        <button
+          type="submit"
+          class="btn btn-info ml-3 btn-sm py-1 text-capitalize"
+          id="signin-btn"
+        >
+          Sign In
+        </button>
+        <a href="{% url 'password_reset' %}" class="mt-2 ml-2">
+          <small>Forgot Password</small>
+        </a>
+        <a href="{% url 'register' %}" class="mt-2 ml-1">
+          <small>| Register</small>
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

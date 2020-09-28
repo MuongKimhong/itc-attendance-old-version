@@ -1,0 +1,120 @@
+{% extends "app/layout.html" %}
+<!-- static -->
+{% load static %}
+<!-- title -->
+{% block title %} <title>Attendance</title> {% endblock %}
+<!-- content -->
+{% block content %}
+<div class="col-md-11 ml-auto mr-auto">
+  <div id="attendance-content">
+    <div class="row">
+      <h3>Attendance Submitted on :</h3>
+      <h3 style="font-weight: 500">
+        &nbsp;{{object.date_created|date:"l-d / F / Y - g:i a"}}
+      </h3>
+    </div>
+    <div class="row">
+      <h4>Submitted by :</h4>
+      <h4 style="font-weight: 500">
+        &nbsp;{{object.teacher.first_name}} {{object.teacher.last_name}}
+      </h4>
+    </div>
+    <div class="row">
+      <h4>Subject :</h4>
+      <h4 style="font-weight: 500">&nbsp;{{object.course.subject}}</h4>
+    </div>
+    <div class="row">
+      <h4>Department :</h4>
+      <h4 style="font-weight: 500">&nbsp;{{object.course.department}}</h4>
+    </div>
+    <div class="row">
+      <h4>Year :</h4>
+      <h4 style="font-weight: 500">&nbsp;{{object.course.years}}</h4>
+    </div>
+    <div class="row">
+      <h4>Total Student :</h4>
+      <h4 style="font-weight: 500">&nbsp;{{totalStudent}}</h4>
+    </div>
+    <div class="row">
+      <h4>Total come :</h4>
+      <h4 style="font-weight: 500">&nbsp;{{object.student.all.count}}</h4>
+    </div>
+    <div class="row">
+      <h4>Total Absent :</h4>
+      <h4 style="font-weight: 500">&nbsp;{{totalAbsent}}</h4>
+      <h4 style="font-weight: 500">&nbsp;&nbsp;(&nbsp;</h4>
+      {% for name in allStudentNameAbsent %}
+      <h4 style="font-weight: 500">{{name}},&nbsp;&nbsp;</h4>
+      {% endfor %}
+      <h4 style="font-weight: 500">&nbsp;)</h4>
+    </div>
+  </div>
+  <form method="POST" id="edit-attendance-form">
+    {% csrf_token %}
+    <div class="row" id="card">
+      {% for form in form.student %}
+      <div class="col-md-3 px-0">
+        <h6>{{form.tag}} {{form.choice_label}}</h6>
+      </div>
+      {% endfor %}
+    </div>
+  </form>
+  <div class="text-right mt-5">
+    <button
+      class="btn btn-primary btn-lg text-capitalize py-2"
+      style="font-size: 17px"
+      id="edit-attendance-btn"
+    >
+      Edit
+    </button>
+    <a
+      href="{% url 'class_detail' object.course.id %}"
+      class="btn btn-info btn-lg text-capitalize py-2"
+      style="font-size: 17px"
+      id="backhome-btn"
+    >
+      Back
+    </a>
+    <button
+      class="btn btn-primary btn-lg text-capitalize py-2"
+      style="font-size: 17px"
+      id="edit-attendance-btn-submit"
+      type="submit"
+      form="edit-attendance-form"
+    >
+      Edit
+    </button>
+    <button
+      class="btn btn-info btn-lg text-capitalize py-2"
+      style="font-size: 17px"
+      id="back-btn-submit"
+    >
+      Back
+    </button>
+  </div>
+</div>
+{% endblock %}
+<!-- javascript -->
+{% block javascript %}
+<script>
+  $("#card").hide();
+  $("#edit-attendance-btn-submit").hide();
+  $("#back-btn-submit").hide();
+  $("#edit-attendance-btn").click(function () {
+    $("#card").slideToggle();
+    $("#attendance-content").slideToggle();
+    $("#edit-attendance-btn").hide();
+    $("#backhome-btn").hide();
+    $("#edit-attendance-btn-submit").show();
+    $("#back-btn-submit").show();
+  });
+  $("#back-btn-submit").click(function () {
+    $("#attendance-content").slideToggle();
+    $("#card").slideToggle();
+    $("#back-btn-submit").hide();
+    $("#edit-attendance-btn-submit").hide();
+    $("#edit-attendance-btn").show();
+    $("#backhome-btn").show();
+  });
+</script>
+{% endblock %}
