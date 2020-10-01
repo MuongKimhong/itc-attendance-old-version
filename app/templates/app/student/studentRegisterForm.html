@@ -1,0 +1,81 @@
+<section>
+  <form
+    v-show="showStudentForm"
+    action="{% url 'student_register' %}"
+    method="POST"
+    id="form-student"
+  >
+    {% csrf_token %}
+    <div class="row">
+      <div class="md-form col-md-4">
+        {{ sForm.email }}
+        <label for="email" class="ml-3">Email Address</label>
+        <small id="s-error-text-email"></small>
+      </div>
+      <div class="md-form col-md-4">
+        {{ sForm.first_name }}
+        <label for="first_name" class="ml-3">First Name</label>
+        <small id="s-error-text-first-name"></small>
+      </div>
+      <div class="md-form col-md-4">
+        {{ sForm.last_name }}
+        <label for="last_name" class="ml-3">Last Name</label>
+        <small id="s-error-text-last-name"></small>
+      </div>
+      <div class="md-form col-md-4">
+        {{ sForm.password1 }}
+        <label for="pasword1" class="ml-3">Password </label>
+      </div>
+      <div class="md-form col-md-4">
+        {{ sForm.password2 }}
+        <label for="password2" class="ml-3">Confirm Password</label>
+        <small id="s-error-text-password"></small>
+      </div>
+      <div class="md-form col-md-4">
+        {{ sForm.student_id }}
+        <label class="ml-3" id="label">Student ID</label>
+        <small id="s-error-text-student-id"></small>
+      </div>
+      <div class="md-form col-md-4">
+        {{ sForm.date_of_birth }}
+        <label for="date_of_birth" class="ml-3">Date of Birth</label>
+        <small id="s-error-text-date-of-birth"></small>
+      </div>
+      <div class="md-form col-md-4">
+        {{ sForm.phone }}
+        <label for="phone" class="ml-3">Phone Number</label>
+        <small id="error-text-phone"></small>
+      </div>
+      <div class="col-md-4">
+        <label class="ml-1" id="label">Gender</label>
+        {{ sForm.gender }}
+      </div>
+    </div>
+    <div class="row">
+      <button
+        type="submit"
+        class="btn btn-info ml-3 btn-sm py-1 mt-4"
+        id="signup-btn"
+      >
+        Sign Up
+      </button>
+      <a
+        href="#"
+        class="mt-4 pt-1 ml-2"
+        data-target="#log-in-modal"
+        data-toggle="modal"
+      >
+        <small>already have an account? Sign In here</small>
+      </a>
+      <a
+        href="#"
+        id="label"
+        type="button"
+        v-on:click="teacherForm()"
+        class="mt-4 pt-1 ml-1"
+      >
+        <small>| Sign Up as Teacher</small>
+      </a>
+    </div>
+  </form>
+</section>

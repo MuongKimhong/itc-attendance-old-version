@@ -5,66 +5,40 @@ from django import forms
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from rest_framework.authtoken.models import Token
 
-first_name_attr = {
-    'type': 'text', 'id': 'first_name', 'name': 'first_name', 'class': 'form-control'
-}
-last_name_attr = {
-    'type': 'text', 'id': 'last_name', 'name': 'last_name', 'class': 'form-control'
-}
-email_attr = {
-    'type': 'email', 'id': 'email', 'name': 'email', 'class': 'form-control'
-}
-phone_attr = {
-    'type': 'text', 'id': 'phone', 'name': 'phone', 'class': 'form-control'
-}
-password1_attr = {
-    'type': 'password', 'id': 'password1', 'name': 'password1', 'class': 'form-control'
-}
-password2_attr = {
-    'type': 'password', 'id': 'password2', 'name': 'password2', 'class': 'form-control'
-}
-teacher_type_attr = {
-    'id': 'teacher_type', 'name': 'teacher_type', 'class': 'form-control'
-}
-gender_attr = {
-    'id': 'gender', 'name': 'gender', 'class': 'form-control'
-}
-student_id_attr = {
-    'id': 'student_id', 'name': 'student_id', 'class': 'form-control', 
-    'type': 'text'
-}
+# Form Attribute
+first_name_attr = {'type': 'text', 'id': 'first_name', 'class': 'form-control'}
+last_name_attr = {'type': 'text', 'id': 'last_name', 'class': 'form-control'}
+student_id_attr = {'id': 'student_id', 'class': 'form-control', 'type': 'text'}
+password1_attr = {'type': 'password','id': 'password1', 'class': 'form-control'}
+password2_attr = {'type': 'password','id': 'password2', 'class': 'form-control'}
+date_attr = {'class': 'form-control', 'type': 'date', 'id': 'date_of_birth'}
+email_attr = {'type': 'email', 'id': 'email', 'class': 'form-control'}
+phone_attr = {'type': 'text', 'id': 'phone', 'class': 'form-control'}
+teacher_type_attr = {'id': 'teacher_type', 'class': 'form-control'}
+gender_attr = {'id': 'gender', 'class': 'form-control'}
 
+attr = [
+    first_name_attr, last_name_attr, password1_attr, password2_attr, email_attr,
+    gender_attr, phone_attr, date_attr,  teacher_type_attr, student_id_attr,
+]
+
+# Teacher Register
 class TeacherRegisterForm(UserCreationForm):
     class Meta(UserCreationForm):
         model = CustomUser
         fields = ['first_name', 'last_name', 'password1', 'password2', 'email', 'gender', 'phone',
                   'date_of_birth', 'teacher_type']
-        widgets = {
-            'date_of_birth': forms.DateInput({'class': 'form-control', 'type': 'date', 'id': 'date_of_birth'}),
-            # 'department': forms.CheckboxSelectMultiple(),
-            # 'years': forms.CheckboxSelectMultiple()
-        }
+        widgets = {'date_of_birth': forms.DateInput(date_attr)}
+
     def __init__(self, *args, **kwargs):
         super(TeacherRegisterForm, self).__init__(*args, **kwargs)
-        self.fields['first_name'].widget.attrs.update(first_name_attr)
-        self.fields['first_name'].required = True
-        self.fields['last_name'].widget.attrs.update(last_name_attr)
-        self.fields['last_name'].required = True
-        self.fields['email'].widget.attrs.update(email_attr)
-        self.fields['email'].required = True
-        self.fields['phone'].widget.attrs.update(phone_attr)
-        self.fields['phone'].required = True
-        self.fields['password1'].widget.attrs.update(password1_attr)
-        self.fields['password1'].required = True
-        self.fields['password2'].widget.attrs.update(password2_attr)
-        self.fields['password2'].required = True
-        self.fields['date_of_birth'].required = True
-        self.fields['teacher_type'].widget.attrs.update(teacher_type_attr)
-        self.fields['teacher_type'].required = True
-        self.fields['gender'].widget.attrs.update(gender_attr)
-        self.fields['gender'].required = True
-        # self.fields['department'].required = True
-        # self.fields['years'].required = True
+        i = 0
+
+        for field in self._meta.fields:
+            if i <= 8:
+                self.fields[field].required = True
+                self.fields[field].widget.attrs.update(attr[i])
+                i = i + 1
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -75,61 +49,38 @@ class TeacherRegisterForm(UserCreationForm):
         teacher = Teacher.objects.create(user=user, email=email, first_name=first_name)
         return (user, teacher)
 
+
+# Student Register
 class StudentRegisterForm(UserCreationForm):
     class Meta(UserCreationForm):
         model = CustomUser
         fields = ['first_name', 'last_name', 'password1', 'password2', 'email', 'gender', 'phone',
                   'date_of_birth', 'student_id']
-        widgets = {
-            'date_of_birth': forms.DateInput({'class': 'form-control', 'type': 'date', 'id': 'date_of_birth'}),
-            # 'department': forms.CheckboxSelectMultiple(),
-            # 'years': forms.CheckboxSelectMultiple()
-        }
+        widgets = {'date_of_birth': forms.DateInput(date_attr)}
 
     def __init__(self, *args, **kwargs):
         super(StudentRegisterForm, self).__init__(*args, **kwargs)
-        self.fields['first_name'].widget.attrs.update(first_name_attr)
-        self.fields['first_name'].required = True
-        self.fields['last_name'].widget.attrs.update(last_name_attr)
-        self.fields['last_name'].required = True
-        self.fields['email'].widget.attrs.update(email_attr)
-        self.fields['email'].required = True
-        self.fields['phone'].widget.attrs.update(phone_attr)
-        self.fields['phone'].required = True
-        self.fields['password1'].widget.attrs.update(password1_attr)
-        self.fields['password1'].required = True
-        self.fields['password2'].widget.attrs.update(password2_attr)
-        self.fields['password2'].required = True
-        self.fields['date_of_birth'].required = True
-        self.fields['student_id'].widget.attrs.update(student_id_attr)
-        self.fields['student_id'].required = True
-        self.fields['gender'].widget.attrs.update(gender_attr)
-        self.fields['gender'].required = True
-        # self.fields['department'].required = True
-        # self.fields['years'].required = True
+        i = 0
 
-    # def clean_department(self):
-    #     value = self.cleaned_data.get('department')
-    #     if len(value) > 1:
-    #         raise forms.ValidationError("You can't select more than one department!")
-    #     return value
-
-    # def clean_years(self):
-    #     value = self.cleaned_data.get('years')
-    #     if len(value) > 1:
-    #         raise forms.ValidationError("You can't select more than one year!")
-    #     return value
+        for field in self._meta.fields:
+            if field == "student_id":
+                self.fields[field].required = True
+                self.fields[field].widget.attrs.update(attr[9])
+                break
+            else:
+                self.fields[field].required = True
+                self.fields[field].widget.attrs.update(attr[i])
+                i = i + 1
 
     def save(self, commit=True):
         user = super().save(commit=False)
         user.is_student = True
-        user.is_active = True
         user.save()
         email = str(self.cleaned_data.get('email'))
         first_name = str(self.cleaned_data.get('first_name'))
-
         student = Student.objects.create(user=user, email=email, first_name=first_name)
         return (user, student)
+
 
 # login form
 class LoginForm(forms.Form):
@@ -154,6 +105,7 @@ class LoginForm(forms.Form):
             raise forms.ValidationError({'email': err_message, 'password': err_message})
         return cleaned_data
 
+
 # Edit user form
 class EditUserForm(UserChangeForm):
     class Meta(UserChangeForm):
@@ -164,7 +116,7 @@ class EditUserForm(UserChangeForm):
             'student_id'
         ]
         widgets = {
-            'date_of_birth': forms.DateInput({'class': 'form-control', 'type': 'date', 'id': 'date_of_birth'}),
+            'date_of_birth': forms.DateInput(date_attr),
             'department': forms.CheckboxSelectMultiple({'class': 'edit-user-department'}),
             'years': forms.CheckboxSelectMultiple({'class': 'edit-user-years'})
         }
@@ -195,32 +147,31 @@ class EditUserForm(UserChangeForm):
                 return (user, student)
 
 
+# Update user info Form
 class UpdateUserForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ['email', 'first_name', 'last_name', 'gender', 'phone', 'date_of_birth', 'department', 'years', 'teacher_type', 'student_id']
+        fields = ['email', 'first_name', 'last_name', 'gender', 'phone','teacher_type', 'student_id', 
+                  'date_of_birth', 'department', 'years']
         widgets = {
-            'date_of_birth': forms.DateInput({'class': 'form-control', 'type': 'date', 'id': 'date_of_birth'}),
+            'date_of_birth': forms.DateInput(date_attr),
             'department': forms.CheckboxSelectMultiple({'class': 'edit-user-department'}),
             'years': forms.CheckboxSelectMultiple({'class': 'edit-user-years'})
         }
 
     def __init__(self, *args, **kwargs):
-        eAttr = {'class': 'form-control', 'id': 'eu'}
-        fAttr = {'class': 'form-control', 'id': 'fu'}
-        lAttr = {'class': 'form-control', 'id': 'lu'}
-        gAttr = {'class': 'form-control', 'id': 'gu'}
-        pAttr = {'class': 'form-control', 'id': 'pu'}
-        tAttr = {'class': 'form-control', 'id': 'tu'}
-        sAttr = {'class': 'form-control', 'id': 'su'}
         super(UpdateUserForm, self).__init__(*args, **kwargs)
-        self.fields['email'].widget.attrs.update(eAttr)
-        self.fields['first_name'].widget.attrs.update(fAttr)
-        self.fields['last_name'].widget.attrs.update(lAttr)
-        self.fields['gender'].widget.attrs.update(gAttr)
-        self.fields['phone'].widget.attrs.update(pAttr)
-        self.fields['teacher_type'].widget.attrs.update(tAttr)
-        self.fields['student_id'].widget.attrs.update(sAttr)
+        attr = {'class': 'form-control', 'id': ''}
+        fAttr = ['eu', 'fu', 'lu', 'gu', 'pu', 'tu', 'su']
+        i = 0
+
+        for field in self._meta.fields:
+            if field == "date_of_birth" or field == "department" or field == "years":
+                break
+            else:
+                attr['id'] = fAttr[i]
+                self.fields[field].widget.attrs.update(attr)
+                i = i + 1
 
     def clean_department(self):
         department = self.cleaned_data.get('department')

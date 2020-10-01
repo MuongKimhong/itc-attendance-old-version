@@ -1,0 +1,158 @@
+<section>
+  <script>
+    $("#create-class-form").submit(function (e) {
+      e.preventDefault();
+      $.ajax({
+        type: "POST",
+        url: "{% url 'create_class' %}",
+        data: {
+          department: $("#class-department-field").val(),
+          years: $("#class-years-field").val(),
+          subject: $("#class-subject-field").val(),
+          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken").val(),
+        },
+        success: function (response) {
+          var successResult = response["success"];
+          if (successResult) {
+            location.reload();
+          }
+        },
+        error: function (response) {
+          var errorResult = response["responseJSON"]["error"];
+          for (var key in errorResult) {
+            if (errorResult.hasOwnProperty(key)) {
+              if (String(key) == "subject") {
+                $("#cc-error-subject")
+                  .html(errorResult[key][0])
+                  .fadeIn()
+                  .delay(2000)
+                  .fadeOut();
+              } else if (String(key) == "department") {
+                $("#cc-error-department")
+                  .html(errorResult[key][0])
+                  .fadeIn()
+                  .delay(2000)
+                  .fadeOut();
+              } else if (String(key) == "years") {
+                $("#cc-error-years")
+                  .html(errorResult[key][0])
+                  .fadeIn()
+                  .delay(2000)
+                  .fadeOut();
+              }
+            }
+          }
+        },
+      });
+    });
+    $("#fill-department-form").submit(function (e) {
+      e.preventDefault();
+      var serializedData = $(this).serialize();
+      $.ajax({
+        type: "POST",
+        url: "{% url 'update_user' user.id %}",
+        data: serializedData,
+        success: function (response) {
+          location.reload();
+        },
+        error: function (response) {
+          var errorResult = response["responseJSON"]["error"];
+          console.log(JSON.stringify(errorResult));
+          for (var key in errorResult) {
+            if (errorResult.hasOwnProperty(key)) {
+              if (String(key) == "department") {
+                $("#fill-department-error")
+                  .html(errorResult[key][0])
+                  .fadeIn()
+                  .delay(2000)
+                  .fadeOut();
+              } else if (String(key) == "years") {
+                $("#fill-years-error")
+                  .html(errorResult[key][0])
+                  .fadeIn()
+                  .delay(2000)
+                  .fadeOut();
+              }
+            }
+          }
+        },
+      });
+    });
+    $("#edit-user-form").submit(function (e) {
+      e.preventDefault();
+      var serializedData = $(this).serialize();
+      $.ajax({
+        type: "POST",
+        url: "{% url 'update_user' user.id %}",
+        data: serializedData,
+        success: function (response) {
+          location.reload();
+        },
+        error: function (response) {
+          var errorResult = response["responseJSON"]["error"];
+          console.log(JSON.stringify(errorResult));
+          for (var key in errorResult) {
+            if (errorResult.hasOwnProperty(key)) {
+              if (String(key) == "department") {
+                $("#edit-user-department-error")
+                  .html(errorResult[key][0])
+                  .fadeIn()
+                  .delay(3000)
+                  .fadeOut();
+              } else if (String(key) == "years") {
+                $("#edit-user-years-error")
+                  .html(errorResult[key][0])
+                  .fadeIn()
+                  .delay(3000)
+                  .fadeOut();
+              }
+            }
+          }
+        },
+      });
+    });
+    $("#join-class-form").submit(function (e) {
+      e.preventDefault();
+      var serializedData = $(this).serialize();
+      $.ajax({
+        type: "POST",
+        url: "{% url 'join_class' %}",
+        data: serializedData,
+        success: function (response) {
+          location.reload();
+        },
+        error: function (response) {
+          var errorResult = response["responseJSON"]["error"];
+          var alreadyInside = response["responseJSON"]["errors"];
+          var notFound = response["responseJSON"]["notFound"];
+          if (alreadyInside) {
+            $("#code-field-error")
+              .html("You are already inside the class")
+              .fadeIn()
+              .delay(4000)
+              .fadeOut();
+          } else if (notFound) {
+            $("#code-field-error")
+              .html("Class Not found")
+              .fadeIn()
+              .delay(4000)
+              .fadeOut();
+          } else if (errorResult) {
+            console.log(JSON.stringify(errorResult));
+            for (var key in errorResult) {
+              if (errorResult.hasOwnProperty(key)) {
+                if (String(key) == "code") {
+                  $("#code-field-error")
+                    .html(errorResult[key][0])
+                    .fadeIn()
+                    .delay(4000)
+                    .fadeOut();
+                }
+              }
+            }
+          }
+        },
+      });
+    });
+  </script>
+</section>

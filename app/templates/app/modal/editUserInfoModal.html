@@ -1,0 +1,103 @@
+<section>
+  <div
+    class="modal fade"
+    id="edit-info-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="edit-info-label"
+    aria-hidden="true"
+  >
+    <div
+      class="modal-dialog modal-lg modal-dialog-centered modal-notify modal-info"
+      role="document"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title w-500 white-text" id="edit-info-label">
+            Edit Info
+          </h4>
+        </div>
+        <form
+          action="{% url 'update_user' user.id %}"
+          method="POST"
+          id="edit-user-form"
+        >
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-4 md-form">
+                {{eForm.email}}
+                <label for="" class="ml-3">Email Address</label>
+              </div>
+              <div class="col-md-4 md-form">
+                {{eForm.first_name}}
+                <label for="" class="ml-3">First Name</label>
+              </div>
+              <div class="col-md-4 md-form">
+                {{eForm.last_name}}
+                <label for="" class="ml-3">Last Name</label>
+              </div>
+              <div class="col-md-4 md-form">
+                {{eForm.date_of_birth}}
+                <label for="" class="ml-3">Date of Birth</label>
+              </div>
+              <div class="col-md-4 md-form">
+                {{eForm.phone}}
+                <label for="" class="ml-3">Phone Number</label>
+              </div>
+              <div class="col-md-4">
+                <label for="" class="ml-3">Gender</label>
+                {{eForm.gender}}
+              </div>
+              {% if user.is_teacher %}
+              <div class="col-md-4">
+                <label for="" class="ml-3">Teacher Type</label>
+                {{eForm.teacher_type}}
+              </div>
+              {% endif %} {% if user.is_student %}
+              <div class="col-md-4 md-form">
+                {{eForm.student_id}}
+                <label for="" class="ml-3">Student ID</label>
+              </div>
+              {% endif %}
+              <div class="col-md-4">
+                <label for="" class="ml-3">Department</label>
+                <div class="row" id="t-department-check">
+                  {% for department in eForm.department %}
+                  <h6 class="ml-1">{{department}}</h6>
+                  {% endfor %}
+                </div>
+                <small id="edit-user-department-error"></small>
+              </div>
+              <div class="col-md-4">
+                <label for="" class="ml-3">Year</label>
+                <div class="row" id="t-year-check">
+                  {% for year in eForm.years %}
+                  <h6 class="ml-2">{{year}}</h6>
+                  {% endfor %}
+                </div>
+                <small id="edit-user-years-error"></small>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="submit"
+              id="edit-info-btn"
+              class="btn btn-info btn-sm text-capitalize"
+            >
+              Done
+            </button>
+            <button
+              type="button"
+              id="edit-info-close-btn"
+              class="btn btn-outline-info btn-sm text-capitalize"
+            >
+              Back
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

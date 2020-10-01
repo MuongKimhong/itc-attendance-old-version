@@ -1,5 +1,6 @@
-from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth import REDIRECT_FIELD_NAME
+
 
 # Student required
 def student_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url="login"):
@@ -10,6 +11,7 @@ def student_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, log
     if function:
         return actual_decorator(function)
     return actual_decorator
+
 
 # Teacher required
 def teacher_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url="login"):

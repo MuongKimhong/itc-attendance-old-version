@@ -1,0 +1,148 @@
+<section>
+  <script>
+    $("#form-teacher").submit(function (e) {
+      e.preventDefault();
+      var serializedData = $(this).serialize();
+      $.ajax({
+        type: "POST",
+        url: "{% url 'teacher_register' %}",
+        data: serializedData,
+        dataType: "json",
+        success: function (response) {
+          var successResult = response["success"];
+          if (successResult) {
+            $("#suc-text").html("Account was created successfully!");
+            $("#log-in-modal").modal("show");
+            $("#error-text-email").html("");
+            $("#error-text-first-name").html("");
+            $("#error-text-last-name").html("");
+            $("#error-text-password").html("");
+            $("#error-text-phone").html("");
+            $("#error-text-date-of-birth").html("");
+          }
+        },
+        error: function (response) {
+          // get error response from db
+          var result = response["responseJSON"]["error"];
+          // loop through the error object and check for specific value
+          for (var key in result) {
+            if (result.hasOwnProperty(key)) {
+              if (String(key) == "email") {
+                $("#error-text-email")
+                  .html(result[key][0])
+                  .fadeIn()
+                  .delay(4000)
+                  .fadeOut();
+              } else if (String(key) == "first_name") {
+                $("#error-text-first-name")
+                  .html(result[key][0])
+                  .fadeIn()
+                  .delay(4000)
+                  .fadeOut();
+              } else if (String(key) == "last_name") {
+                $("#error-text-last-name")
+                  .html(result[key][0])
+                  .fadeIn()
+                  .delay(4000)
+                  .fadeOut();
+              } else if (String(key) == "password2") {
+                $("#error-text-password")
+                  .html(result[key][0])
+                  .fadeIn()
+                  .delay(4000)
+                  .fadeOut();
+              } else if (String(key) == "phone") {
+                $("#error-text-phone")
+                  .html(result[key][0])
+                  .fadeIn()
+                  .delay(4000)
+                  .fadeOut();
+              } else if (String(key) == "date_of_birth") {
+                $("#error-text-date-of-birth")
+                  .html(result[key][0])
+                  .fadeIn()
+                  .delay(4000)
+                  .fadeOut();
+              }
+            }
+          }
+        },
+      });
+    });
+    $("#form-student").submit(function (e) {
+      e.preventDefault();
+      var serializedData = $(this).serialize();
+      $.ajax({
+        type: "POST",
+        url: "{% url 'student_register' %}",
+        data: serializedData,
+        dataType: "json",
+        success: function (response) {
+          var suc_result = response["success"];
+          if (suc_result) {
+            $("#suc-text").html("Account was created successfully!");
+            $("#log-in-modal").modal("show");
+            $("#s-error-text-email").html("");
+            $("#s-error-text-first-name").html("");
+            $("#s-error-text-last-name").html("");
+            $("#s-error-text-password").html("");
+            $("#s-error-text-phone").html("");
+            $("#s-error-text-date-of-birth").html("");
+            $("#s-error-text-student-id").html("");
+          }
+        },
+        error: function (response) {
+          // get error response from db
+          var result = response["responseJSON"]["error"];
+          // loop through the error object and check for specific value
+          for (var key in result) {
+            if (result.hasOwnProperty(key)) {
+              if (String(key) == "email") {
+                $("#s-error-text-email")
+                  .html(result[key][0])
+                  .fadeIn()
+                  .delay(3000)
+                  .fadeOut();
+              } else if (String(key) == "first_name") {
+                $("#s-error-text-first-name")
+                  .html(result[key][0])
+                  .fadeIn()
+                  .delay(3000)
+                  .fadeOut();
+              } else if (String(key) == "last_name") {
+                $("#s-error-text-last-name")
+                  .html(result[key][0])
+                  .fadeIn()
+                  .delay(3000)
+                  .fadeOut();
+              } else if (String(key) == "password2") {
+                $("#s-error-text-password")
+                  .html(result[key][0])
+                  .fadeIn()
+                  .delay(3000)
+                  .fadeOut();
+              } else if (String(key) == "phone") {
+                $("#s-error-text-phone")
+                  .html(result[key][0])
+                  .fadeIn()
+                  .delay(3000)
+                  .fadeOut();
+                $("#s-error-text-date-of-birth")
+                  .html(result[key][0])
+                  .fadeIn()
+                  .delay(3000)
+                  .fadeOut();
+              } else if (String(key) == "student_id") {
+                $("#s-error-text-student-id")
+                  .html(result[key][0])
+                  .fadeIn()
+                  .delay(3000)
+                  .fadeOut();
+              }
+            }
+          }
+        },
+      });
+    });
+  </script>
+</section>

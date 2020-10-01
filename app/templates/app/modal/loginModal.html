@@ -1,0 +1,69 @@
+<section>
+  <div
+    class="modal fade"
+    id="log-in-modal"
+    tabindex="3"
+    role="dialog"
+    aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true"
+  >
+    <!-- Add .modal-dialog-centered to .modal-dialog to vertically center the modal -->
+    <div
+      class="modal-dialog modal-dialog-centered modal-notify modal-info"
+      role="document"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title white-text" id="exampleModalLongTitle">
+            Sign In
+          </h5>
+          <button
+            type="button"
+            class="close white-text"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form action="{% url 'login' %}" id="login-form" method="POST">
+          <div class="modal-body">
+            {% csrf_token %}
+            <small id="suc-text"></small>
+            <div class="md-form">
+              {{ lForm.email }}
+              <label>Email Address</label>
+              <small id="l-error-text-email"
+                >{{lForm.email.errors|striptags}}</small
+              >
+            </div>
+            <div class="md-form">
+              {{ lForm.password }}
+              <label>Password</label>
+              <small id="l-error-text-password"
+                >{{lForm.password.errors|striptags}}</small
+              >
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="submit"
+              class="btn btn-outline-info ml-3 btn-sm py-1 text-capitalize"
+              id="signin-btn"
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              class="btn btn-info btn-sm py-1 text-capitalize"
+              id="signup-btn"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

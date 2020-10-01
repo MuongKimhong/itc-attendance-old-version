@@ -1,0 +1,45 @@
+<section>
+  <div
+    class="modal fade"
+    id="choose-user-modal"
+    tabindex="3"
+    role="dialog"
+    aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true"
+    data-backdrop="false"
+  >
+    <!-- Add .modal-dialog-centered to .modal-dialog to vertically center the modal -->
+    <div
+      class="modal-dialog modal-dialog-centered modal-notify modal-info"
+      role="document"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title white-text" id="exampleModalLongTitle">
+            Choose user type
+          </h5>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <button
+              type="button"
+              id="teacher-btn"
+              class="btn btn-primary btn-lg ml-auto"
+              v-on:click="teacherForm()"
+            >
+              Teacher
+            </button>
+            <button
+              type="button"
+              id="student-btn"
+              class="btn btn-outline-primary btn-lg mr-auto"
+              v-on:click="studentForm()"
+            >
+              Student
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

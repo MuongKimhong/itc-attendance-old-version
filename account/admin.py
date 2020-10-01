@@ -1,7 +1,7 @@
-from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Teacher, Student
 from .forms import TeacherRegisterForm, StudentRegisterForm, EditUserForm
+from .models import CustomUser, Teacher, Student
+from django.contrib.auth.admin import UserAdmin
+from django.contrib import admin
 
 
 class CustomUserAdmin(UserAdmin):

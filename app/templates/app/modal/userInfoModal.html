@@ -1,0 +1,127 @@
+<section>
+  <div
+    class="modal fade"
+    id="user-info-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="myModalLabel"
+    aria-hidden="true"
+  >
+    <div
+      class="modal-dialog modal-lg modal-dialog-centered modal-notify modal-info"
+      role="document"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title w-500 white-text" id="myModalLabel">
+            {{user.first_name}} {{user.last_name}}'s Info
+          </h4>
+          <button
+            type="button"
+            class="close white-text"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="display-info">
+            <div class="row">
+              {% if user.is_teacher %}
+              <div class="col-md-6">
+                <h5>Name : {{user.first_name}} {{user.last_name}}</h5>
+              </div>
+              <div class="col-md-6">
+                <h5>Email Address : {{user.email}}</h5>
+              </div>
+              <div class="col-md-6">
+                <h5>Date of birth : {{user.date_of_birth}}</h5>
+              </div>
+              <div class="col-md-6">
+                <h5>Phone Number : {{user.phone}}</h5>
+              </div>
+              <div class="col-md-6">
+                <h5>Gender : {{user.gender}}</h5>
+              </div>
+              <div class="col-md-6">
+                <h5>Teacher Type : {{user.teacher_type}}</h5>
+              </div>
+              <div class="col-md-6">
+                <div class="row">
+                  <h5 class="ml-3">Department :</h5>
+                  {% for department in user.department.all %}
+                  <h5 class="ml-2" id="t-department-list">{{ department }}</h5>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="row">
+                  <h5 class="ml-3">Year :</h5>
+                  {% for year in user.years.all %}
+                  <h5 class="ml-2" id="t-year-list">{{ year }},</h5>
+                  {% endfor %}
+                </div>
+              </div>
+              {% endif %}
+              <!--student  -->
+              {% if user.is_student %}
+              <div class="col-md-6">
+                <h5>Name : {{user.first_name}} {{user.last_name}}</h5>
+              </div>
+              <div class="col-md-6">
+                <h5>Email Address : {{user.email}}</h5>
+              </div>
+              <div class="col-md-6">
+                <h5>Date of birth : {{user.date_of_birth}}</h5>
+              </div>
+              <div class="col-md-6">
+                <h5>Phone Number : {{user.phone}}</h5>
+              </div>
+              <div class="col-md-6">
+                <h5>Gender : {{user.gender}}</h5>
+              </div>
+              <div class="col-md-6">
+                <h5>Teacher Type : {{user.student_id}}</h5>
+              </div>
+              <div class="col-md-6">
+                <div class="row">
+                  <h5 class="ml-3">Department :</h5>
+                  {% for department in user.department.all %}
+                  <h5 class="ml-2">{{ department }}</h5>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="row">
+                  <h5 class="ml-3">Year :</h5>
+                  {% for year in user.years.all %}
+                  <h5 class="ml-2">{{ year }}</h5>
+                  {% endfor %}
+                </div>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            id="edit-info-btn"
+            class="btn btn-outline-info btn-sm text-capitalize"
+          >
+            Edit Info
+          </button>
+          <button
+            type="button"
+            class="btn btn-info btn-sm text-capitalize"
+            id="close-info-btn"
+            data-dismiss="modal"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

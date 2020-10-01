@@ -32,6 +32,7 @@ class AttendanceForm(forms.ModelForm):
 
     def __init__(self, class_pk, *args, **kwargs):
         super(AttendanceForm, self).__init__(*args, **kwargs)
+        self.fields['student'].required = True
         current_class = Class.objects.get(id=class_pk)
         self.fields['student'].queryset = current_class.student.order_by('first_name')
 

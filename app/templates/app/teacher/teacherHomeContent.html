@@ -1,0 +1,40 @@
+<section>
+  <div class="row">
+    <div class="col-md-9">
+      <div class="row" id="allClasses-div">
+        {% for class in allClasses %}
+        <a
+          href="{% url 'class_detail' class.id %}"
+          class="btn btn-secondary ml-auto mr-auto text-capitalize col-md-5 mt-3 mb-3 btn-lg z-depth-2"
+        >
+          <h3 class="mt-1">{{class.subject}}</h3>
+          <p class="mb-auto">{{class.department}} - {{class.years}}</p>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card col-md-12 ml-auto mr-auto">
+        <button
+          class="btn btn-outline-info btn-lg py-2 px-2 ml-auto mr-auto mt-2 mb-2 col-md-12 text-capitalize"
+          id="create-class-btn"
+          data-target="#create-class-modal"
+          data-toggle="modal"
+        >
+          Create Class
+        </button>
+      </div>
+
+      <div class="card col-md-12 ml-auto mr-auto mt-4">
+        <div class="card-body px-0">
+          <h5 class="text-center">All Class's codes</h5>
+          {% for code in allClasses %}
+          <h6 style="text-align: left" class="mt-3">
+            {{code.subject}} - {{code.random_code}}
+          </h6>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

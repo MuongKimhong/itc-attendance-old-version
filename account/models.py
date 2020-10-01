@@ -1,8 +1,9 @@
 from django.contrib.auth.base_user import BaseUserManager
-from django.contrib.auth.models import AbstractUser
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
 from django.db import models
+
 
 # User Manager
 class CustomUserManager(BaseUserManager):
@@ -31,6 +32,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError(_('Superuser must have is_superuser=True.'))
         return self.create_user(email, password, **extra_fields)
 
+
 # CustomUser
 class CustomUser(AbstractUser):
     username = None
@@ -56,6 +58,7 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
 
+
 # Teacher
 class Teacher(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
@@ -64,6 +67,7 @@ class Teacher(models.Model):
 
     def __str__(self):
         return self.user.email
+
 
 # Student
 class Student(models.Model):

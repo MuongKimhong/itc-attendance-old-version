@@ -1,0 +1,72 @@
+<section>
+  <div
+    class="modal fade"
+    id="create-class-modal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="edit-info-label"
+    aria-hidden="true"
+  >
+    <div
+      class="modal-dialog modal-side modal-top-right modal-notify modal-info"
+      role="document"
+    >
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title w-500 white-text" id="edit-info-label">
+            Create Class
+          </h4>
+          <button
+            type="button"
+            class="close white-text"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form
+          action="{% url 'create_class' %}"
+          method="POST"
+          id="create-class-form"
+        >
+          {% csrf_token %}
+          <div class="modal-body">
+            <div class="col-md-12 px-1 md-form">
+              {{cForm.subject}}
+              <label for="" class="ml-3">Subject</label>
+              <small id="cc-error-subject"></small>
+            </div>
+            <div class="col-md-12 px-1 mt-4">
+              <label for="" class="ml-3">Department</label>
+              {{cForm.department}}
+              <small id="cc-error-department"></small>
+            </div>
+            <div class="col-md-12 px-1 mt-4">
+              <label for="" class="ml-3">Years</label>
+              {{cForm.years}}
+              <small id="cc-error-years"></small>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="submit"
+              id="create-class-modal-btn"
+              class="btn btn-info btn-sm text-capitalize"
+            >
+              Create
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-info btn-sm text-capitalize"
+              data-dismiss="modal"
+              id="close-class-modal"
+            >
+              Close
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

@@ -121,6 +121,7 @@
                 </div>
                 {% endfor %}
               </div>
+              <small id="error-student-field" style="color: red"></small>
             </form>
           </div>
         </div>
@@ -241,10 +242,12 @@
       >
         Leave Forms ({{object.student.all.count}})
       </button>
-      <button class="btn btn-outline-secondary btn-lg py-2 px-2 ml-auto mr-auto mt-2 mb-2 col-md-12 text-capitalize"
+      <button
+        class="btn btn-outline-secondary btn-lg py-2 px-2 ml-auto mr-auto mt-2 mb-2 col-md-12 text-capitalize"
         id="show-attendance-count-btn"
         type="button"
-        style="font-size: 17px">
+        style="font-size: 17px"
+      >
         Student Attendance Count
       </button>
       {% endif %}
@@ -270,6 +273,34 @@
     $checkboxes.change(function () {
       var countChecked = $checkboxes.filter(":checked").length;
       $("#current-check").text(countChecked);
+    });
+  });
+
+  $("#check-attendance-form").submit(function (e) {
+    e.preventDefault();
+    var serializedData = $(this).serialize();
+    $.ajax({
+      type: "POST",
+      url: "{% url 'class_detail' object.id %}",
+      data: serializedData,
+      success: function (response) {
+        location.reload();
+      },
+      error: function (response) {
+        var errorResult = response["responseJSON"]["error"];
+        console.log(JSON.stringify(errorResult));
+        for (var key in errorResult) {
+          if (errorResult.hasOwnProperty(key)) {
+            if (String(key) == "student") {
+              $("#error-student-field")
+                .html(errorResult[key][0])
+                .fadeIn()
+                .delay(3000)
+                .fadeOut();
+            }
+          }
+        }
+      },
     });
   });
 </script>
@@ -336,19 +367,21 @@
         $("#show-attendance-btn").html("Attendance");
       }
     });
-    $("#show-attendance-count-btn").click(function() {
-       console.log("sss")
-       console.log($("#show-attendance-count-btn").text().trim());
-      if ($("#show-attendance-count-btn").text().trim() == "Student Attendance Count" ) {
+    $("#show-attendance-count-btn").click(function () {
+      console.log("sss");
+      console.log($("#show-attendance-count-btn").text().trim());
+      if (
+        $("#show-attendance-count-btn").text().trim() ==
+        "Student Attendance Count"
+      ) {
         $("#teacher-attendance-content").slideUp();
         $("#teacher-leaveforms-content").slideUp();
         $("#teacher-all-attendances-content").slideUp();
         $("#teacher-all-attendance-count").slideDown();
         $("#check-submit-btn").fadeOut();
         $("#show-attendance-count-btn").html("Hide");
-      }
-      else if ($("#show-attendance-count-btn").text().trim() == "Hide") {
-        console.log("dljahf")
+      } else if ($("#show-attendance-count-btn").text().trim() == "Hide") {
+        console.log("dljahf");
         $("#teacher-all-attendance-count").slideUp();
         $("#teacher-laveforms-content").slideUp();
         $("#teacher-all-attendance-content").slideUp();
@@ -356,8 +389,7 @@
         $("#check-submit-btn").fadeIn();
         $("#show-attendance-count-btn").html("Student Attendance Count");
       }
-    })
-
+    });
   });
 </script>
 {% endblock %}

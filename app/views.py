@@ -25,11 +25,14 @@ from . import forms as app_forms
 @login_required(login_url="/")
 def home(request):
     template_name = "app/home.html"
+
+    # Teacher instance
     if request.user.is_teacher:
         cForm = app_forms.ClassForm()  # ClassForm
         eForm = acc_forms.UpdateUserForm(instance=request.user)
         allClasses = Class.objects.filter(teacher=request.user).order_by('-date_created')
         context = {'eForm': eForm, 'cForm': cForm, 'allClasses': allClasses}
+    # Student Instance
     elif request.user.is_student:
         student = Student.objects.get(user=request.user)
         ecForm = app_forms.EnterCodeForm()
@@ -42,8 +45,9 @@ def home(request):
 
 
 # Create Class View
-@login_required(login_url="/")
+
 @teacher_required
+@login_required(login_url="/")
 def createClassView(request):
     if request.method == "POST":
         form = app_forms.ClassForm(request.POST)
@@ -62,12 +66,13 @@ def createClassView(request):
 class AttendanceFormUpdate(LoginRequiredMixin, UpdateView):
     login_url = '/'
     model = Attendance
-    template_name = "app/teacher/attendanceDetail.html"
     form_class = app_forms.AttendanceForm
+    template_name = "app/teacher/attendanceDetail.html"
 
     def get_form_kwargs(self):
         kwargs = super(AttendanceFormUpdate, self).get_form_kwargs()
         current_class = Class.objects.get(id=self.object.course.id)
+        
         if self.request.user.is_teacher:
             kwargs['class_pk'] = current_class.id  # pass class id to form
         return kwargs
@@ -75,15 +80,18 @@ class AttendanceFormUpdate(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(AttendanceFormUpdate, self).get_context_data(**kwargs)
         current_class = Class.objects.get(id=self.object.course.id)
-        totalStudent = Class.objects.get(id=self.object.course.id).student.count()  # total student in Class
+
+        totalStudent = current_class.student.count()  # total student in Class
         totalAbsent = totalStudent - self.object.student.all().count()  # total student absent
         totalAttendanceSubmit = Attendance.objects.filter(course=current_class).count()
+
         allStudentNameInClass = []  # all student names who are inside class
         allStudentNameCome = []  # all student names who come to class
         allStudentNameAbsent = []  # all student name who are absent
         attendance = Attendance.objects.filter(course=current_class)
+
         # Loop through all students inside class
-        for studentInClass in Class.objects.get(id=self.object.course.id).student.all():
+        for studentInClass in current_class.student.all():
             name = studentInClass.user.first_name + " " + studentInClass.user.last_name  # get fullname
             allStudentNameInClass.append(name)
 
@@ -126,10 +134,12 @@ class ClassDetailView(LoginRequiredMixin, FormMixin, DetailView):
             
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         if self.request.user.is_student:
             currentUser = self.request.user
             allLeaveForms = LeaveForm.objects.filter(student=currentUser, studentClass=self.object)
             context['allLeaveForms'] = allLeaveForms.order_by('-date_created')
+
         elif self.request.user.is_teacher:
             i = 0
             allComeCount = []  # list of student names with count of attendance
@@ -151,6 +161,7 @@ class ClassDetailView(LoginRequiredMixin, FormMixin, DetailView):
                     fullname = name.user.first_name + " " + name.user.last_name
                     allStudentNameCome['attendanceObject{}'.format(i)].append(fullname)
 
+            # count number of come of student
             comeCount = dict(collections.Counter(itertools.chain(*allStudentNameCome.values())))
             comeCount = dict(collections.OrderedDict(sorted(comeCount.items())))
             
@@ -171,6 +182,8 @@ class ClassDetailView(LoginRequiredMixin, FormMixin, DetailView):
         form = self.get_form()
         if form.is_valid():
             return self.form_valid(form)
+        else: 
+            return JsonResponse({'error': form.errors}, status=400)
 
     def form_valid(self, form):
         if self.request.user.is_student:
@@ -201,14 +214,15 @@ def enterCodeView(request):
     if request.method == "POST":
         form = app_forms.EnterCodeForm(request.POST)
         code = request.POST['code']
-        print(code)
         student = Student.objects.get(user=request.user)
+
         if Class.objects.filter(random_code=code).exists():
             class_code = Class.objects.get(random_code=code)
-            print(class_code)
+
             if student not in class_code.student.all():
                 class_code.student.add(student)
                 class_code.save()
+
                 if form.is_valid():
                     form.save()
                     return JsonResponse({'success': True}, status=200)
