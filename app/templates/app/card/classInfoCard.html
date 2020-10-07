@@ -1,0 +1,31 @@
+<section>
+  <div class="card col-md-12 ml-auto mr-auto mt-3" id="class-info-card">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-4 mt-2">
+          <h5>
+            Lecturer : {{object.teacher.first_name}}
+            {{object.teacher.last_name}}
+          </h5>
+        </div>
+        <div class="col-md-4 mt-2">
+          <h5>Department: {{object.department}}</h5>
+        </div>
+        <div class="col-md-4 mt-2">
+          <h5>Year : {{object.years}}</h5>
+        </div>
+        <div class="col-md-4 mt-2">
+          <h5>Subject : {{object.subject}}</h5>
+        </div>
+        <div class="col-md-4 mt-2">
+          <h5>Total Student : {{object.student.all.count}}</h5>
+        </div>
+        {% if user.is_teacher %}
+        <div class="col-md-4 mt-2">
+          <h5>Class Code : {{object.random_code}}</h5>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>

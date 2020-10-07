@@ -1,0 +1,35 @@
+<section>
+  <div
+    class="card ml-auto mr-auto col-md-12 mt-3 z-depth-3"
+    id="ask-attendance-card"
+  >
+    <div class="card-body">
+      <form method="POST" id="ask-attendance-form">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-md-6 md-form pl-5">
+            {{form.leaveFromDate}}
+            <label for="" class="ml-5">Leave From Date</label>
+          </div>
+          <div class="col-md-6 md-form pr-5">
+            {{form.leaveTillDate}}
+            <label for="" class="ml-3">Leave Till Date</label>
+          </div>
+        </div>
+        <div class="col-md-12 md-form px-4">
+          {{form.leaveReason}}
+          <label for="" class="ml-4">Leave Reason</label>
+        </div>
+        <div class="text-right">
+          <button
+            type="submit"
+            class="btn btn-info btn-sm"
+            style="font-size: 16px"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

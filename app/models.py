@@ -1,7 +1,10 @@
-from shortuuidfield import ShortUUIDField
-from django.db import models
+# standard library import
 import shortuuid
 import uuid
+# shortuuid package import
+from shortuuidfield import ShortUUIDField
+# django import
+from django.db import models
 
 
 # Department
@@ -21,14 +24,6 @@ class Year(models.Model):
         return self.years
 
 
-# Teacher Type
-class Type(models.Model):
-    type = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.type
-
-
 # Class
 class Class(models.Model):
     # get random code
@@ -41,7 +36,7 @@ class Class(models.Model):
     years = models.ForeignKey(Year, on_delete=models.CASCADE)
     subject = models.CharField(max_length=200, unique=True)
     date_created = models.DateTimeField(auto_now_add=True)
-    student = models.ManyToManyField("account.Student")
+    student = models.ManyToManyField("account.Student", blank=True)
     
     def __str__(self):
         return self.subject

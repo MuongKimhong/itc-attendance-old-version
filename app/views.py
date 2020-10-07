@@ -14,7 +14,7 @@ import collections
 import itertools
 
 # App Import
-from .models import Department, Year, Type, Class, LeaveForm, Attendance
+from .models import Department, Year, Class, LeaveForm, Attendance
 from account.decorators import student_required, teacher_required
 from account.models import Teacher, Student, CustomUser
 from account import forms as acc_forms
@@ -45,12 +45,12 @@ def home(request):
 
 
 # Create Class View
-
 @teacher_required
 @login_required(login_url="/")
 def createClassView(request):
     if request.method == "POST":
         form = app_forms.ClassForm(request.POST)
+
         if form.is_valid():
             form = form.save(commit=False)
             form.teacher = request.user
@@ -58,6 +58,7 @@ def createClassView(request):
             return JsonResponse({'success': True}, status=200)
         else:
             return JsonResponse({'error': form.errors}, status=400)
+
     return HttpResponse("Class Create View")
 
 
@@ -75,39 +76,40 @@ class AttendanceFormUpdate(LoginRequiredMixin, UpdateView):
         
         if self.request.user.is_teacher:
             kwargs['class_pk'] = current_class.id  # pass class id to form
+
         return kwargs
 
     def get_context_data(self, **kwargs):
         context = super(AttendanceFormUpdate, self).get_context_data(**kwargs)
         current_class = Class.objects.get(id=self.object.course.id)
 
-        totalStudent = current_class.student.count()  # total student in Class
-        totalAbsent = totalStudent - self.object.student.all().count()  # total student absent
-        totalAttendanceSubmit = Attendance.objects.filter(course=current_class).count()
+        total_student = current_class.student.count()  # total student in Class
+        total_absent = total_student - self.object.student.all().count()  # total student absent
 
-        allStudentNameInClass = []  # all student names who are inside class
-        allStudentNameCome = []  # all student names who come to class
-        allStudentNameAbsent = []  # all student name who are absent
+        all_student_name_in_class = []  # all student names who are inside class
+        all_student_name_come = []  # all student names who come to class
+        all_student_name_absent = []  # all student name who are absent
         attendance = Attendance.objects.filter(course=current_class)
 
         # Loop through all students inside class
-        for studentInClass in current_class.student.all():
-            name = studentInClass.user.first_name + " " + studentInClass.user.last_name  # get fullname
-            allStudentNameInClass.append(name)
+        for student_in_class in current_class.student.all():
+            name = student_in_class.user.first_name + " " + student_in_class.user.last_name
+            all_student_name_in_class.append(name)
 
         # Loop through all students who come to class
         for student in self.object.student.all():
-            name = student.user.first_name + " " + student.user.last_name  # get fullname
-            allStudentNameCome.append(name)
+            name = student.user.first_name + " " + student.user.last_name
+            all_student_name_come.append(name)
             
         # loop through all students to check who is absent
-        for name in allStudentNameInClass:
-            if name not in allStudentNameCome:
-                allStudentNameAbsent.append(name)
+        for name in all_student_name_in_class:
+            if name not in all_student_name_come:
+                all_student_name_absent.append(name)
 
-        context['totalStudent'] = totalStudent
-        context['totalAbsent'] = totalAbsent
-        context['allStudentNameAbsent'] = allStudentNameAbsent
+        context['totalStudent'] = total_student
+        context['totalAbsent'] = total_absent
+        context['allStudentNameAbsent'] = all_student_name_absent
+
         return context
 
     def get_success_url(self):
@@ -128,50 +130,52 @@ class ClassDetailView(LoginRequiredMixin, FormMixin, DetailView):
 
     def get_form_kwargs(self):
         kwargs = super(ClassDetailView, self).get_form_kwargs()
+
         if self.request.user.is_teacher:
             kwargs['class_pk'] = self.kwargs.get('pk')
+
         return kwargs
             
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         if self.request.user.is_student:
-            currentUser = self.request.user
-            allLeaveForms = LeaveForm.objects.filter(student=currentUser, studentClass=self.object)
-            context['allLeaveForms'] = allLeaveForms.order_by('-date_created')
+            current_user = self.request.user
+            all_leave_forms = LeaveForm.objects.filter(student=current_user, studentClass=self.object)
+            context['all_leave_forms'] = all_leave_forms.order_by('-date_created')
 
         elif self.request.user.is_teacher:
             i = 0
-            allComeCount = []  # list of student names with count of attendance
-            allStudentNameCome = {}  # all student names who attend to class
-            allStudentNameInClass = []  # all student names in class            
+            all_come_count = []  # list of student names with count of attendance
+            all_student_name_come = {}  # all student names who attend to class
+            all_student_name_in_class = []  # all student names in class            
             # get all attendance objects for specific class
-            allAttendanceObjects = Attendance.objects.filter(course=self.object).all()
+            all_attendance_objects = Attendance.objects.filter(course=self.object).all()
 
             # Loop to check who are already in class
-            for studentInClass in Class.objects.get(id=self.object.id).student.all():
-                name = studentInClass.user.first_name + " " + studentInClass.user.last_name  # get fullname
-                allStudentNameInClass.append(name)
+            for student_in_class in Class.objects.get(id=self.object.id).student.all():
+                name = student_in_class.user.first_name + " " + student_in_class.user.last_name
+                all_student_name_in_class.append(name)
 
             # Loop to get all student who come to class
-            for object in allAttendanceObjects:
+            for object in all_attendance_objects:
                 i = i + 1
-                allStudentNameCome['attendanceObject{}'.format(i)] = []
+                all_student_name_come['attendanceObject{}'.format(i)] = []
                 for name in object.student.all():
                     fullname = name.user.first_name + " " + name.user.last_name
-                    allStudentNameCome['attendanceObject{}'.format(i)].append(fullname)
+                    all_student_name_come['attendanceObject{}'.format(i)].append(fullname)
 
             # count number of come of student
-            comeCount = dict(collections.Counter(itertools.chain(*allStudentNameCome.values())))
-            comeCount = dict(collections.OrderedDict(sorted(comeCount.items())))
+            come_count = dict(collections.Counter(itertools.chain(*all_student_name_come.values())))
+            come_count = dict(collections.OrderedDict(sorted(come_count.items())))
             
-            for name in comeCount:
-                allComeCount.append("{} - {}".format(name, comeCount[name]))
+            for name in come_count:
+                all_come_count.append("{} - {}".format(name, come_count[name]))
 
             context['number_of_student'] = Class.objects.get(id=self.object.pk).student.count()
             context['allLeaveForms'] = LeaveForm.objects.filter(studentClass=self.object).order_by('-date_created')
             context['allAttendances'] = Attendance.objects.filter(course=self.object).order_by('-date_created')
-            context['totalComeCount'] = allComeCount
+            context['totalComeCount'] = all_come_count
         return context
         
     def get_success_url(self):

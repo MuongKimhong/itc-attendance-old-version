@@ -56,7 +56,7 @@ class EnterCodeForm(forms.ModelForm):
 
     def clean_code(self):
         code = self.cleaned_data.get('code')
-        print(code)
+
         if not Class.objects.filter(random_code=code).exists():
             print("not found")
             raise forms.ValidationError("Class with this code not found!")

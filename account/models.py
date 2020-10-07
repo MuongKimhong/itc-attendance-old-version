@@ -33,6 +33,9 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
+teacher_type_choice = (('Full Time', _('Full Time')), ('Part Time', _('Part Time')))
+gender_choice = (('Male', _('Male')), ('Female', _('Female')))
+
 # CustomUser
 class CustomUser(AbstractUser):
     username = None
@@ -40,13 +43,13 @@ class CustomUser(AbstractUser):
     is_teacher = models.BooleanField('teacher status', default=False)
     # For both student and teacher
     email = models.EmailField(_('Email Address'), unique=True, blank=True)
-    gender = models.CharField(max_length=10, choices=(('Male', _('Male')), ('Female', _('Female'))), blank=True)
+    gender = models.CharField(max_length=10, choices=gender_choice, blank=True)
     phone = models.CharField(max_length=50, blank=True)
     date_of_birth = models.DateField(blank=True, null=True)
     department = models.ManyToManyField("app.Department", blank=True)
     years = models.ManyToManyField("app.Year", blank=True)
     # For Teacher
-    teacher_type = models.ForeignKey("app.Type", on_delete=models.CASCADE, blank=True, null=True)
+    teacher_type = models.CharField(max_length=50, choices=teacher_type_choice, blank=True)
     # For student
     student_id = models.CharField(max_length=20, blank=True, null=True)
 
